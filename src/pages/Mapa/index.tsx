@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import GoogleMapReact from "google-map-react";
 import "./Mapa.css";
 
@@ -17,10 +17,27 @@ const latlng = {
 };
 
 export default function Mapa() {
+  const [array_dados, setDados] = useState<Coleta[]>([]);
+
   useEffect(() => {
-    //fazer a requisição dos dados aqui dentro!!!
     console.log("tudo carregado!");
+
+    fetch("http://localhost:8080/dados_coletados")
+      .then((res) => res.json())
+      .then((res) => {
+        setDados([...res]);
+      });
   }, []);
+
+  function filtrar() {
+    let aux_array_dados_coletados = array_dados;
+
+    aux_array_dados_coletados = array_dados.filter((dado) => {
+      if (dado.variavel === 1) return dado;
+    });
+
+    setDados([...aux_array_dados_coletados]);
+  }
 
   return (
     <div className="container">
@@ -28,7 +45,9 @@ export default function Mapa() {
         <div className="col-esq">
           <div className="header-colEsq">Filtros</div>
           <div className="linha-colEsq">
-            <button className="botao-esq">Marcadores</button>
+            <button className="botao-esq" onClick={filtrar}>
+              Marcadores
+            </button>
           </div>
           <div className="linha-colEsq">
             <button className="botao-esq">Marcadores</button>
@@ -44,41 +63,38 @@ export default function Mapa() {
         <div style={{ height: "100vh", width: "100%" }}>
           <GoogleMapReact
             bootstrapURLKeys={{
-              key: "AIzaSyAAx7_a4MbuI0eeWOJEkP5hYh4vWBpQRO8",
+              key: "AIzaSyDx67AXBO2zmnl6nV6_piHwf2rxRBd7AIY",
             }}
             defaultCenter={{ lat: -22.1276, lng: -51.3856 }}
             defaultZoom={8}
           >
-            {/* <AnyReactComponent
-              {...{ lat: -22.1276, lng: -51.3856 }}
-              text="eae mennnnnnnnnnn"
-            /> */}
-            {/* <Tooltip title="" {...latlng} style={{ color: red[500] }}>
-                <LocationOnIcon style={{ transform: "translate(-50%, -100%)" }} />
-            </Tooltip> */}
-            <Room
-              fontSize="large"
-              style={{ color: red[500], transform: "translate(-50%, -100%)" }}
-              {...{ lat: -22.1276, lng: -51.3856 }}
-              onClick={() => console.log("clicou")}
-            />
-
-            <Room
-              fontSize="large"
-              style={{ color: red[500], transform: "translate(-50%, -100%)" }}
-              {...{ lat: -23.2657, lng: -47.2991 }}
-              onClick={() => console.log("clicou")}
-            />
-
-            <Room
-              fontSize="large"
-              style={{ color: red[500], transform: "translate(-50%, -100%)" }}
-              {...{ lat: -23.3645, lng: -46.7403 }}
-              onClick={() => console.log("clicou")}
-            />
+            {}
+            {array_dados.map((dado, index) => {
+              return (
+                <Room
+                  key={index}
+                  fontSize="large"
+                  style={{
+                    color: red[400],
+                    transform: "translate(-50%, -100%)",
+                  }}
+                  {...{ lat: dado.lat, lng: dado.lng }}
+                  onClick={() => console.log("clicou no " + index)}
+                />
+              );
+            })}
           </GoogleMapReact>
         </div>
       </div>
     </div>
   );
 }
+
+type Coleta = {
+  lat: Number;
+  lng: Number;
+  endereco: {
+    rua: String;
+  };
+  variavel: Number | null;
+};
