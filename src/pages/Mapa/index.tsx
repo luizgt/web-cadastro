@@ -63,7 +63,7 @@ export default function Mapa() {
         <div style={{ height: "100vh", width: "100%" }}>
           <GoogleMapReact
             bootstrapURLKeys={{
-              key: "AIzaSyDx67AXBO2zmnl6nV6_piHwf2rxRBd7AIY",
+              key: "",
             }}
             defaultCenter={{ lat: -22.1276, lng: -51.3856 }}
             defaultZoom={8}

@@ -11,7 +11,7 @@ function MapaFuncional({
 }) {
   return (
     <GoogleMapReact
-      bootstrapURLKeys={{ key:"AIzaSyDx67AXBO2zmnl6nV6_piHwf2rxRBd7AIY"}}
+      bootstrapURLKeys={{ key:""}}
       defaultCenter={props.center}
       defaultZoom={props.zoom}
     />
